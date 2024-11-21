@@ -1,23 +1,11 @@
-self.addEventListener("install", (event) => {
-    event.waitUntil(
-        caches.open("vacunacion-cache").then((cache) => {
-            return cache.addAll([
-                "./",
-                "./index.html",
-                "./style.css",
-                "./script.js",
-                "./manifest.json",
-                "./icon-192.png",
-                "./icon-512.png"
-            ]);
-        })
-    );
-});
-
-self.addEventListener("fetch", (event) => {
-    event.respondWith(
-        caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
-        })
-    );
-});
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/service-worker.js")  // La ruta debe ser la raíz del proyecto
+            .then((registration) => {
+                console.log("Service Worker registrado con éxito:", registration);
+            })
+            .catch((error) => {
+                console.error("Error al registrar Service Worker:", error);
+            });
+    });
+}

@@ -1,3 +1,4 @@
+// Esquema de vacunación (en meses)
 const esquemaVacunacion = {
     "0-2 meses": ["BCG", "Hepatitis B"],
     "2 meses": ["Pentavalente", "Polio IPV", "Neumococo", "Rotavirus"],
@@ -11,6 +12,7 @@ const esquemaVacunacion = {
     "5-6 años": ["Triple Viral", "Polio refuerzo", "Triple Bacteriana"]
 };
 
+// Función para calcular las vacunas esperadas según la fecha de nacimiento
 function calcularVacunas() {
     const fechaNacimiento = document.getElementById("fecha-nacimiento").value;
     if (!fechaNacimiento) {
@@ -18,14 +20,17 @@ function calcularVacunas() {
         return;
     }
 
+    // Calcular edad en meses
     const fechaNac = new Date(fechaNacimiento);
     const hoy = new Date();
     const edadMeses = Math.floor((hoy - fechaNac) / (1000 * 60 * 60 * 24 * 30));
 
+    // Mostrar la edad
     const edadAnios = Math.floor(edadMeses / 12);
     const edadRestanteMeses = edadMeses % 12;
     document.getElementById("edad").innerText = `Edad: ${edadAnios} años y ${edadRestanteMeses} meses`;
 
+    // Calcular vacunas esperadas
     let vacunasEsperadas = [];
     for (const rango in esquemaVacunacion) {
         const [inicio, fin] = rango.split('-').map((v) => parseInt(v));
@@ -34,6 +39,7 @@ function calcularVacunas() {
         }
     }
 
+    // Mostrar vacunas esperadas
     const vacunasEsperadasUl = document.getElementById("vacunas-esperadas");
     vacunasEsperadasUl.innerHTML = '';
     vacunasEsperadas.forEach((vacuna) => {
@@ -42,18 +48,33 @@ function calcularVacunas() {
         vacunasEsperadasUl.appendChild(li);
     });
 
+    // Mostrar las vacunas faltantes (en este caso, no se pueden comparar, pero lo puedes dejar vacío)
+    const vacunasFaltantesUl = document.getElementById("vacunas-faltantes");
+    vacunasFaltantesUl.innerHTML = ''; // Si tienes un método para compararlas con un carnet, lo puedes añadir aquí.
+
+    // Mostrar el contenedor de resultados
     document.getElementById("resultado").style.display = "block";
 }
+self.addEventListener("install", (event) => {
+    event.waitUntil(
+        caches.open("vacunacion-cache").then((cache) => {
+            return cache.addAll([
+                "./",              // Página de inicio
+                "./index.html",     // Página principal
+                "./style.css",      // Estilos CSS
+                "./script.js",      // Lógica JavaScript
+                "./manifest.json",  // Manifesto
+                "./icon-192.png",   // Icono de la app
+                "./icon-512.png",   // Icono de la app
+            ]);
+        })
+    );
+});
 
-function procesarImagen() {
-    alert("Función de procesamiento de imagen pendiente");
-}
-
-// Registrar el service worker
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js")
-            .then((registration) => console.log("ServiceWorker registrado con éxito:", registration))
-            .catch((error) => console.error("Error al registrar ServiceWorker:", error));
-    });
-}
+self.addEventListener("fetch", (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
+});
