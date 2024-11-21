@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Vacunación</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json"> <!-- Enlace al manifest -->
+</head>
+<body>
+
+    <div class="container">
+        <h1>Control de Vacunación</h1>
+
+        <!-- Campo para ingresar la fecha de nacimiento -->
+        <div class="form">
+            <label for="fecha-nacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha-nacimiento" required>
+            <button onclick="calcularVacunas()">Analizar Vacunación</button>
+        </div>
+
+        <!-- Campo para subir la foto -->
+        <div class="form">
+            <label for="archivo-carnet">Subir Foto del Carnet:</label>
+            <input type="file" id="archivo-carnet" accept="image/*">
+            <button onclick="procesarImagen()">Procesar Foto</button>
+        </div>
+
+        <!-- Contenedor para los resultados -->
+        <div id="resultado" style="display: none;">
+            <h2>Resultados de Vacunación</h2>
+            <p id="edad"></p>
+            <h3>Vacunas Esperadas</h3>
+            <ul id="vacunas-esperadas"></ul>
+            <h3>Vacunas Faltantes</h3>
+            <ul id="vacunas-faltantes"></ul>
+            <h3>Vacunas Aplicadas</h3>
+            <ul id="vacunas-aplicadas"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Archivo JavaScript -->
+</body>
+</html>
